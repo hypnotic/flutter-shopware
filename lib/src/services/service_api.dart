@@ -62,6 +62,7 @@ class APIService {
   }) async {
     HttpClientResponse? response;
     try {
+      queryParams?.removeWhere((_, value) => value == null);
       HttpClientRequest request;
       final Uri uri = _getUri(
         path,

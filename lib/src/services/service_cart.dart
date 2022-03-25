@@ -8,11 +8,13 @@ import '../models/model_cart.dart';
 class CartService {
   const CartService();
 
-  /// Fetches the current cart
-  Future<Cart?> getCart() async {
+  /// Fetches or creates a new cart.
+  /// Provide the [name] of the new cart. This parameter will only be used when creating a new cart.
+  Future<Cart?> getCart({String? name}) async {
     return await APIService.client.performRequest<Cart?>(
       RequestType.get,
       path: 'checkout/cart',
+      queryParams: {'name': name},
       parser: Cart.fromJson,
     );
   }
