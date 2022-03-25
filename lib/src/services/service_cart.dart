@@ -21,9 +21,19 @@ class CartService {
 
   /// Adds items to the cart. An item can be a product or promotion for example.
   /// They are referenced by the referencedId-parameter.
-  Future<Cart?> updateCart(CartUpdate cart) async {
+  Future<Cart?> addItemsToCart(CartUpdate cart) async {
     return await APIService.client.performRequest<Cart?>(
       RequestType.post,
+      path: 'checkout/cart/line-item',
+      body: cart.toJson(),
+      parser: Cart.fromJson,
+    );
+  }
+
+  /// Updates the cart. Typically to update the quantities of the items.
+  Future<Cart?> updateCart(CartUpdate cart) async {
+    return await APIService.client.performRequest<Cart?>(
+      RequestType.patch,
       path: 'checkout/cart/line-item',
       body: cart.toJson(),
       parser: Cart.fromJson,

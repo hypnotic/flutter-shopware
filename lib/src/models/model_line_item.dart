@@ -8,9 +8,9 @@ part 'model_line_item.g.dart';
 class LineItem {
   const LineItem({
     required this.id,
-    required this.referencedId,
     required this.quantity,
-    required this.type,
+    this.type,
+    this.referencedId,
     this.label,
     this.description,
     this.removable,
@@ -23,10 +23,10 @@ class LineItem {
   Map<String, dynamic> toJson() => _$LineItemToJson(this);
 
   final String id;
-  final String referencedId;
+  final String? referencedId;
   final String? label;
   final String? description;
-  final String type;
+  final String? type;
   final bool? removable;
   final bool? stackable;
   final bool? modified;
