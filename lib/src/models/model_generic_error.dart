@@ -1,12 +1,11 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_shopware/flutter_shopware.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'model_generic_error.g.dart';
 
 @immutable
-@JsonSerializable(createToJson: false)
-class GenericError extends Entity {
+@JsonSerializable()
+class GenericError {
   const GenericError(
     this.key,
     this.level,

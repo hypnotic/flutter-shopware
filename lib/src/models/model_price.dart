@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_shopware/flutter_shopware.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'model_price.g.dart';
@@ -13,8 +12,8 @@ enum TaxStatus {
 TaxStatus _taxStatusFromJson(String value) => TaxStatus.values.singleWhere((tax) => tax.name == value.replaceAll('-', ''));
 
 @immutable
-@JsonSerializable(createToJson: false)
-class Price extends Entity {
+@JsonSerializable()
+class Price {
   const Price(
     this.netPrice,
     this.totalPrice,

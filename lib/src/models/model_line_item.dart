@@ -1,35 +1,35 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_shopware/flutter_shopware.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'model_line_item.g.dart';
 
 @immutable
-@JsonSerializable(createToJson: false)
-class LineItem extends Entity {
-  const LineItem(
-    this.id,
-    this.referecedId,
+@JsonSerializable(createToJson: true)
+class LineItem {
+  const LineItem({
+    required this.id,
+    required this.referencedId,
+    required this.quantity,
+    required this.type,
     this.label,
     this.description,
-    this.type,
     this.removable,
     this.stackable,
     this.modified,
     this.good,
-    this.quantity,
-  );
+  });
 
   factory LineItem.fromJson(Map<String, dynamic> json) => _$LineItemFromJson(json);
+  Map<String, dynamic> toJson() => _$LineItemToJson(this);
 
   final String id;
-  final String referecedId;
-  final String label;
-  final String description;
+  final String referencedId;
+  final String? label;
+  final String? description;
   final String type;
-  final bool removable;
-  final bool stackable;
-  final bool modified;
-  final bool good;
+  final bool? removable;
+  final bool? stackable;
+  final bool? modified;
+  final bool? good;
   final int quantity;
 }

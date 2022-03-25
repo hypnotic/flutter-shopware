@@ -1,12 +1,11 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_shopware/flutter_shopware.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'model_transaction.g.dart';
 
 @immutable
-@JsonSerializable(createToJson: false)
-class Transaction extends Entity {
+@JsonSerializable()
+class Transaction {
   const Transaction(
     this.paymentMethodId,
   );

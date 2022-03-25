@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_shopware/src/client_settings.dart';
+import 'package:flutter_shopware/src/models/model_current_context.dart';
 
 enum RequestType {
   post,
@@ -27,10 +28,18 @@ class APIService {
     _httpClient = HttpClient()..connectionTimeout = Duration(milliseconds: _clientSettings.timeout);
   }
 
+  CurrentContext? _context;
+  set currentContext(CurrentContext context) => _context = context;
+
   Future<void> _addHeaders(HttpClientRequest request) async {
     request.headers.contentType = ContentType('application', 'json', charset: 'utf-8');
+    request.headers.add('Accept-Enconding', 'gzip, deflate, br');
     request.headers.add('Accept', 'application/json');
     request.headers.add('sw-access-key', _clientSettings.accessToken);
+
+    if (_context?.token != null) {
+      request.headers.add('sw-context-token', _context!.token!);
+    }
   }
 
   Uri _getUri(
@@ -87,6 +96,7 @@ class APIService {
       final String? responseBody = await response.transform(utf8.decoder).join();
 
       if (responseBody != null) {
+        debugPrint('Body response:\n$responseBody');
         return parser(json.decode(responseBody)) as T;
       }
     } catch (ex, s) {
