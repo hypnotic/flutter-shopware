@@ -27,4 +27,12 @@ class CartService {
       parser: Cart.fromJson,
     );
   }
+
+  /// Deletes the current cart, by removing all items
+  Future<bool> deleteCart() async {
+    return await APIService.client.performRequest<bool>(
+      RequestType.delete,
+      path: 'checkout/cart',
+    );
+  }
 }

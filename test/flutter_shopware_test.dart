@@ -36,5 +36,11 @@ void main() {
       expect(cart, isNotNull);
       expect(lineItem, isNotNull);
     });
+
+    test('deletes the current cart', () async {
+      bool result = await Shopware.cartService.deleteCart();
+
+      expect(result, isTrue);
+    });
   });
 }

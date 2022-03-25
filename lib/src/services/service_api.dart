@@ -58,7 +58,7 @@ class APIService {
     String path = '',
     Map<String, dynamic>? queryParams,
     Map<String, dynamic>? body,
-    required T? Function(Map<String, dynamic>) parser,
+    T? Function(Map<String, dynamic>)? parser,
   }) async {
     HttpClientResponse? response;
     try {
@@ -95,7 +95,9 @@ class APIService {
       final HttpClientResponse response = await request.close();
       final String? responseBody = await response.transform(utf8.decoder).join();
 
-      if (responseBody != null) {
+      if (T == bool) {
+        return (response.statusCode >= 200 && response.statusCode < 300) as T;
+      } else if (responseBody != null && parser != null) {
         debugPrint('Body response:\n$responseBody');
         return parser(json.decode(responseBody)) as T;
       }
@@ -104,7 +106,6 @@ class APIService {
       debugPrint(s.toString());
       rethrow;
     }
-
     return null as T;
   }
 }
