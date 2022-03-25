@@ -17,32 +17,6 @@ void main() {
 
   group('Cart service', () {
     final CartService cartService = Shopware.cartService;
-    test('fetches cart', () async {
-      Cart? cart = await cartService.getCart();
-      expect(cart, isNotNull);
-    });
-
-    test('adds item to the cart', () async {
-      const CartUpdate cartUpdate = CartUpdate(items: [
-        LineItem(
-          id: '36f4320411d74d9ea9b69bd932525cb7',
-          referencedId: '36f4320411d74d9ea9b69bd932525cb7',
-          quantity: 1,
-          type: 'product',
-        )
-      ]);
-
-      Cart? cart = await cartService.updateCart(cartUpdate);
-      LineItem? lineItem = cart?.lineItems.singleWhere((item) => item.referencedId == '36f4320411d74d9ea9b69bd932525cb7');
-
-      expect(cart, isNotNull);
-      expect(lineItem, isNotNull);
-    });
-
-    test('deletes the current cart', () async {
-      bool result = await cartService.deleteCart();
-      expect(result, isTrue);
-    });
 
     test('creates a new cart with name "test"', () async {
       Cart? cart = await cartService.getCart(name: 'test');
@@ -53,6 +27,48 @@ void main() {
       expect(cart.errors, isEmpty);
       expect(cart.token, isNotNull);
       expect(cart.token, isNotEmpty);
+    });
+    test('fetches cart', () async {
+      Cart? cart = await cartService.getCart();
+      expect(cart, isNotNull);
+    });
+
+    test('adds item to the cart', () async {
+      //TODO: Replace with dynamic items from the shop
+      const CartUpdate cartUpdate = CartUpdate(items: [
+        LineItem(
+          id: '36f4320411d74d9ea9b69bd932525cb7',
+          referencedId: '36f4320411d74d9ea9b69bd932525cb7',
+          quantity: 1,
+          type: 'product',
+        ),
+        LineItem(
+          id: '1a58692440974182b533f4465bc23d06',
+          referencedId: '1a58692440974182b533f4465bc23d06',
+          quantity: 1,
+          type: 'product',
+        ),
+      ]);
+
+      Cart? cart = await cartService.updateCart(cartUpdate);
+      LineItem? lineItem1 = cart?.lineItems.singleWhere((item) => item.referencedId == '36f4320411d74d9ea9b69bd932525cb7');
+      LineItem? lineItem2 = cart?.lineItems.singleWhere((item) => item.referencedId == '1a58692440974182b533f4465bc23d06');
+
+      expect(cart, isNotNull);
+      expect(lineItem1, isNotNull);
+      expect(lineItem2, isNotNull);
+    });
+
+    test('removes the previous added items from the cart', () async {
+      Cart? cart = await cartService.removeItemsFromCart(['36f4320411d74d9ea9b69bd932525cb7', '1a58692440974182b533f4465bc23d06']);
+
+      expect(cart, isNotNull);
+      expect(cart!.lineItems, isEmpty);
+    });
+
+    test('deletes the current cart', () async {
+      bool result = await cartService.deleteCart();
+      expect(result, isTrue);
     });
   });
 }

@@ -88,7 +88,7 @@ class APIService {
       }
 
       await _addHeaders(request);
-      debugPrint('Requesting ${uri.toString()} | QueryParams: $queryParams | Body: $body');
+      debugPrint('Requesting ${uri.toString()} | QueryParams: $queryParams | Body: $body\n\n');
       if (body != null) {
         request.write(json.encode(body));
       }
@@ -99,7 +99,7 @@ class APIService {
       if (T == bool) {
         return (response.statusCode >= 200 && response.statusCode < 300) as T;
       } else if (responseBody != null && parser != null) {
-        debugPrint('Body response:\n$responseBody');
+        debugPrint('Body response:\n$responseBody\n\n');
         return parser(json.decode(responseBody)) as T;
       }
     } catch (ex, s) {

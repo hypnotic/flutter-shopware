@@ -30,6 +30,16 @@ class CartService {
     );
   }
 
+  /// Removes the [ids] items from the cart and returns an updated `Cart`
+  Future<Cart?> removeItemsFromCart(List<String> ids) async {
+    return await APIService.client.performRequest<Cart?>(
+      RequestType.delete,
+      path: 'checkout/cart/line-item',
+      queryParams: {'ids[]': ids},
+      parser: Cart.fromJson,
+    );
+  }
+
   /// Deletes the current cart, by removing all items
   Future<bool> deleteCart() async {
     return await APIService.client.performRequest<bool>(
