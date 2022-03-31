@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_shopware/src/client_settings.dart';
+import 'package:flutter_shopware/src/models/model_current_context.dart';
 
 enum RequestType {
   post,
@@ -27,10 +28,18 @@ class APIService {
     _httpClient = HttpClient()..connectionTimeout = Duration(milliseconds: _clientSettings.timeout);
   }
 
+  CurrentContext? _context;
+  set currentContext(CurrentContext context) => _context = context;
+
   Future<void> _addHeaders(HttpClientRequest request) async {
     request.headers.contentType = ContentType('application', 'json', charset: 'utf-8');
+    request.headers.add('Accept-Enconding', 'gzip, deflate, br');
     request.headers.add('Accept', 'application/json');
     request.headers.add('sw-access-key', _clientSettings.accessToken);
+
+    if (_context?.token != null) {
+      request.headers.add('sw-context-token', _context!.token!);
+    }
   }
 
   Uri _getUri(
@@ -49,10 +58,11 @@ class APIService {
     String path = '',
     Map<String, dynamic>? queryParams,
     Map<String, dynamic>? body,
-    required T? Function(Map<String, dynamic>) parser,
+    T? Function(Map<String, dynamic>)? parser,
   }) async {
     HttpClientResponse? response;
     try {
+      queryParams?.removeWhere((_, value) => value == null);
       HttpClientRequest request;
       final Uri uri = _getUri(
         path,
@@ -78,7 +88,7 @@ class APIService {
       }
 
       await _addHeaders(request);
-      debugPrint('Requesting ${uri.toString()} | QueryParams: $queryParams | Body: $body');
+      debugPrint('Requesting ${uri.toString()} | QueryParams: $queryParams | Body: $body\n\n');
       if (body != null) {
         request.write(json.encode(body));
       }
@@ -86,7 +96,10 @@ class APIService {
       final HttpClientResponse response = await request.close();
       final String? responseBody = await response.transform(utf8.decoder).join();
 
-      if (responseBody != null) {
+      if (T == bool) {
+        return (response.statusCode >= 200 && response.statusCode < 300) as T;
+      } else if (responseBody != null && parser != null) {
+        debugPrint('Body response:\n$responseBody\n\n');
         return parser(json.decode(responseBody)) as T;
       }
     } catch (ex, s) {
@@ -94,7 +107,6 @@ class APIService {
       debugPrint(s.toString());
       rethrow;
     }
-
     return null as T;
   }
 }
