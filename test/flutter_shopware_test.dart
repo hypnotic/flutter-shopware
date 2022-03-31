@@ -1,7 +1,10 @@
 import 'package:flutter_shopware/flutter_shopware.dart';
 import 'package:flutter_shopware/src/client_settings.dart';
 import 'package:flutter_shopware/src/models/model_cart_update.dart';
+import 'package:flutter_shopware/src/models/model_product_search.dart';
+import 'package:flutter_shopware/src/models/model_products.dart';
 import 'package:flutter_shopware/src/services/service_cart.dart';
+import 'package:flutter_shopware/src/services/service_product.dart';
 import 'package:flutter_shopware/src/shopware.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -92,6 +95,28 @@ void main() {
     test('deletes the current cart', () async {
       bool result = await cartService.deleteCart();
       expect(result, isTrue);
+    });
+  });
+
+  group('Products service', () {
+    final ProductService productService = Shopware.productService;
+
+    test('fetches a default list of products', () async {
+      Products? products = await productService.listOfProducts();
+
+      expect(products, isNotNull);
+      expect(products!.entity, 'product');
+      expect(products.limit, 100);
+      expect(products.elements, isNotEmpty);
+    });
+
+    test('fetches a list of 50 limit products', () async {
+      Products? products = await productService.listOfProducts(query: const ProductSearch(limit: 50));
+
+      expect(products, isNotNull);
+      expect(products!.entity, 'product');
+      expect(products.limit, 50);
+      expect(products.elements, isNotEmpty);
     });
   });
 }
