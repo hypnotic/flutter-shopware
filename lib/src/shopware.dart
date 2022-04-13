@@ -19,7 +19,7 @@ abstract class Shopware {
 
     // Generate a new context if not provided
     if (settings.contextToken == null) {
-      context = await APIService.client.performRequest<CurrentContext>(
+      context = await APIService.client.performRequest<CurrentContext, MapData>(
         RequestType.get,
         path: 'context',
         parser: CurrentContext.fromJson,

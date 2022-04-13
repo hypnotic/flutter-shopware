@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_shopware/src/models/model_cross_selling.dart';
 import 'package:flutter_shopware/src/models/model_product.dart';
 import 'package:flutter_shopware/src/models/model_product_search.dart';
 import 'package:flutter_shopware/src/models/model_products.dart';
@@ -11,7 +12,7 @@ class ProductService {
   /// List products that match the given criteria. For performance ressons a limit should always be set.
   /// Optionally, a [query] can be provided.
   Future<Products?> listOfProducts({ProductSearch? query}) async {
-    return await APIService.client.performRequest<Products?>(
+    return await APIService.client.performRequest<Products?, MapData>(
       RequestType.post,
       path: 'product',
       body: query?.toJson(),
@@ -22,10 +23,21 @@ class ProductService {
   /// This route is used to load a single product with the corresponding details.
   /// In addition to loading the data, the best variant of the product is determined when a parent id is passed.
   Future<Product?> singleProduct(String productId) async {
-    return await APIService.client.performRequest<Product>(
+    return await APIService.client.performRequest<Product, MapData>(
       RequestType.post,
       path: 'product/$productId',
       parser: Product.fromJson,
+    );
+  }
+
+  /// This route is used to load the cross sellings for a product.
+  /// A product has several cross selling definitions in which several products are linked.
+  /// The route returns the cross sellings together with the linked products.
+  Future<List<CrossSelling>?> crossSellingGroups(String productId) async {
+    return await APIService.client.performRequest<List<CrossSelling>, ListData>(
+      RequestType.post,
+      path: 'product/$productId/cross-selling',
+      parser: (data) => data.map((x) => CrossSelling.fromJson(x)).toList(),
     );
   }
 }

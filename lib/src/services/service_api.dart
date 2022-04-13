@@ -4,6 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_shopware/src/client_settings.dart';
 import 'package:flutter_shopware/src/models/model_current_context.dart';
 
+typedef MapData = Map<String, dynamic>;
+typedef ListData = List<dynamic>;
+
 enum RequestType {
   post,
   get,
@@ -53,12 +56,12 @@ class APIService {
         queryParameters: queryParameters,
       );
 
-  Future<T> performRequest<T>(
+  Future<T> performRequest<T, K>(
     RequestType type, {
     String path = '',
     Map<String, dynamic>? queryParams,
     Map<String, dynamic>? body,
-    T? Function(Map<String, dynamic>)? parser,
+    T? Function(K)? parser,
   }) async {
     HttpClientResponse? response;
     try {

@@ -1,6 +1,7 @@
 import 'package:flutter_shopware/flutter_shopware.dart';
 import 'package:flutter_shopware/src/client_settings.dart';
 import 'package:flutter_shopware/src/models/model_cart_update.dart';
+import 'package:flutter_shopware/src/models/model_cross_selling.dart';
 import 'package:flutter_shopware/src/models/model_product.dart';
 import 'package:flutter_shopware/src/models/model_product_search.dart';
 import 'package:flutter_shopware/src/models/model_products.dart';
@@ -127,6 +128,13 @@ void main() {
 
       expect(products, isNotNull);
       expect(products!.product.id, demoProductId1);
+    });
+
+    test('checkes for cross-selling products of demo product 1', () async {
+      List<CrossSelling>? products = await productService.crossSellingGroups(demoProductId1);
+
+      expect(products, isNotNull);
+      expect(products, isEmpty);
     });
   });
 }
