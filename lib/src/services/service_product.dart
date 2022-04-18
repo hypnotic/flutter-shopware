@@ -40,4 +40,15 @@ class ProductService {
       parser: (data) => data.map((x) => CrossSelling.fromJson(x)).toList(),
     );
   }
+
+  /// Fetches a product listing for a specific [categoryId].
+  /// It also provides filters, sortings and property aggregations, analogous to the /search endpoint through [search].
+  Future<Products?> productsByCategory(String categoryId, [ProductSearch? search]) async {
+    return await APIService.client.performRequest<Products, MapData>(
+      RequestType.post,
+      path: 'product-listing/$categoryId',
+      body: search?.toJson(),
+      parser: Products.fromJson,
+    );
+  }
 }

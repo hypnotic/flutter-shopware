@@ -136,5 +136,18 @@ void main() {
       expect(products, isNotNull);
       expect(products, isEmpty);
     });
+
+    test('fetches the demo product 1 based on its category', () async {
+      Product? product = await productService.singleProduct(demoProductId1);
+
+      expect(product, isNotNull);
+      expect(product!.product.categoryIds, isNotNull);
+      expect(product.product.categoryIds, isNotEmpty);
+
+      Products? products = await productService.productsByCategory(product.product.categoryIds!.first);
+
+      expect(products, isNotNull);
+      expect(products!.elements, isNotEmpty);
+    });
   });
 }

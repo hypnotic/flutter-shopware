@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_shopware/src/models/model_element.dart';
+import 'package:flutter_shopware/src/models/model_filter_state.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'model_products.g.dart';
@@ -15,6 +16,9 @@ class Products {
     this.limit,
     this.aggregations,
     this.elements,
+    this.currentFilters,
+    this.availableSortings,
+    this.sorting,
   });
 
   factory Products.fromJson(Map<String, dynamic> json) => _$ProductsFromJson(json);
@@ -24,6 +28,9 @@ class Products {
   final int? total;
   final int? page;
   final int? limit;
-  final List? aggregations;
+  final dynamic aggregations;
+  final FilterState? currentFilters;
+  final List? availableSortings;
+  final String? sorting;
   final List<Element>? elements;
 }
