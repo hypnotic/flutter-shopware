@@ -51,4 +51,14 @@ class ProductService {
       parser: Products.fromJson,
     );
   }
+
+  /// Perform a filtered search for [productId] reviews based on [search].
+  Future<Products?> review(String productId, [ProductSearch? search]) async {
+    return await APIService.client.performRequest<Products, MapData>(
+      RequestType.post,
+      path: 'product/$productId/reviews',
+      body: search?.toJson(),
+      parser: Products.fromJson,
+    );
+  }
 }

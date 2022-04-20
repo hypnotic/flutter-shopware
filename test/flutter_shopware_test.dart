@@ -149,5 +149,12 @@ void main() {
       expect(products, isNotNull);
       expect(products!.elements, isNotEmpty);
     });
+
+    test('fetches revies of demo product 1 (empty because there is no reviews)', () async {
+      Products? products = await productService.review(demoProductId1);
+
+      expect(products, isNotNull);
+      expect(products!.elements, isEmpty);
+    });
   });
 }
