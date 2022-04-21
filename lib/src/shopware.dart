@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shopware/src/client_settings.dart';
 import 'package:flutter_shopware/src/models/model_current_context.dart';
+import 'package:flutter_shopware/src/services/service_account.dart';
 import 'package:flutter_shopware/src/services/service_api.dart';
 import 'package:flutter_shopware/src/services/service_cart.dart';
 import 'package:flutter_shopware/src/services/service_product.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_shopware/src/services/service_product.dart';
 abstract class Shopware {
   const Shopware._();
 
+  static AccountService accountService = const AccountService();
   static CartService cartService = const CartService();
   static ProductService productService = const ProductService();
 

@@ -3,6 +3,7 @@ import 'package:flutter_shopware/src/models/model_cross_selling.dart';
 import 'package:flutter_shopware/src/models/model_product.dart';
 import 'package:flutter_shopware/src/models/model_product_search.dart';
 import 'package:flutter_shopware/src/models/model_products.dart';
+import 'package:flutter_shopware/src/models/model_review.dart';
 import 'package:flutter_shopware/src/services/service_api.dart';
 
 @immutable
@@ -53,12 +54,21 @@ class ProductService {
   }
 
   /// Perform a filtered search for [productId] reviews based on [search].
-  Future<Products?> review(String productId, [ProductSearch? search]) async {
+  Future<Products?> reviews(String productId, [ProductSearch? search]) async {
     return await APIService.client.performRequest<Products, MapData>(
       RequestType.post,
       path: 'product/$productId/reviews',
       body: search?.toJson(),
       parser: Products.fromJson,
+    );
+  }
+
+  /// Saves a [review] for a [productId].
+  Future<bool> saveReview({required String productId, required Review review}) async {
+    return await APIService.client.performRequest<bool, bool>(
+      RequestType.post,
+      path: 'product/$productId/review',
+      body: review.toJson(),
     );
   }
 }

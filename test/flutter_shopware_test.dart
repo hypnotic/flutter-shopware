@@ -2,9 +2,11 @@ import 'package:flutter_shopware/flutter_shopware.dart';
 import 'package:flutter_shopware/src/client_settings.dart';
 import 'package:flutter_shopware/src/models/model_cart_update.dart';
 import 'package:flutter_shopware/src/models/model_cross_selling.dart';
+import 'package:flutter_shopware/src/models/model_login_data.dart';
 import 'package:flutter_shopware/src/models/model_product.dart';
 import 'package:flutter_shopware/src/models/model_product_search.dart';
 import 'package:flutter_shopware/src/models/model_products.dart';
+import 'package:flutter_shopware/src/models/model_review.dart';
 import 'package:flutter_shopware/src/services/service_cart.dart';
 import 'package:flutter_shopware/src/services/service_product.dart';
 import 'package:flutter_shopware/src/shopware.dart';
@@ -20,6 +22,14 @@ void main() {
         endpoint: 'dev-pcs.sw.hypnotic.agency',
       ),
     );
+
+    final bool isAuthenticated = await Shopware.accountService.login(
+      const LoginData(
+        username: 'agency@hypnotic.pt',
+        password: 'H7pn0t1c.',
+      ),
+    );
+    expect(isAuthenticated, isTrue);
   });
 
   group('Cart service', () {
@@ -150,11 +160,27 @@ void main() {
       expect(products!.elements, isNotEmpty);
     });
 
-    test('fetches revies of demo product 1 (empty because there is no reviews)', () async {
-      Products? products = await productService.review(demoProductId1);
+    test('fetches reviews of demo product 1 (empty because there is no reviews)', () async {
+      Products? products = await productService.reviews(demoProductId1);
 
       expect(products, isNotNull);
       expect(products!.elements, isEmpty);
+    });
+
+    test('saves a review of demo product 1', () async {
+      const Review review = Review(
+        content:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        points: 5,
+        title: 'review of demo product',
+      );
+
+      bool? result = await productService.saveReview(
+        productId: demoProductId1,
+        review: review,
+      );
+
+      expect(result, isTrue);
     });
   });
 }
